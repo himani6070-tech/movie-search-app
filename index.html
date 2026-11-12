@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Card</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="main">
+        <div class="inp-container">
+        <input type="text" name="" id="inp" placeholder="enter the movie..">
+        </div>
+        <div class="container">
+        </div>
+    </div>
+
+</body>
+     <script>
+         const  APIURL  = "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=04c35731a5ee918f014970082a0088b1&page=1"  ;    //top 20 movies 
+        const  IMGPATH  =  "https://image.tmdb.org/t/p/w1280"  ; //image url
+        const  SEARCHAPI  = "https://api.themoviedb.org/3/search/movie?&api_key=04c35731a5ee918f014970082a0088b1&query="  ;  //query base url
+
+       async function fetchmovie(URL){
+                const res = await fetch(URL);
+                const data = await res.json()
+                displaymovie(data.results);
+        }
+        const container = document.querySelector(".container");
+         const inp = document.querySelector("#inp");
+                  
+      function displaymovie(result){
+                //console.log(result);
+                 
+                container.innerHTML ="";
+                for(let data of result){
+                    console.log(result);
+                    
+                    const div =document.createElement("div");
+                    div.classList.add("movie-card");
+
+                    div.innerHTML = ` <div>
+
+                    <img src="${IMGPATH+data.backdrop_path}" alt="Movie">
+
+                    <div class="overlay">
+                        <h2>${data.original_title}</h2>
+                        <p>⭐${data.popularity}</p>
+                        <p>${data.overview}</p>
+
+                        <button>Watch Now</button>
+                    </div>
+                </div> `
+
+                    container.append(div)
+                }
+        } 
+        fetchmovie(APIURL)
+       
+               
+                        inp.addEventListener("keyup",(e)=>{
+                            const value = e.target.value.trim();
+                            console.log(value);
+                        if(value==""){
+                            fetchmovie(APIURL);
+                        }else{
+                        fetchmovie(SEARCHAPI+value);
+                    }
+                });
+        
+     </script>
+</html>
